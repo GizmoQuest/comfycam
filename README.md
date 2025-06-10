@@ -293,7 +293,10 @@ docker run -it --gpus all \
 
 10. Deploy ComfyCam in a new terminal
 ```bash
-docker exec -ti comfycam conda run -n comfystream --no-capture-output python /workspace/comfystream/comfycam_bridge.py
+docker exec -ti comfycam \
+    conda run -n comfystream \
+    --no-capture-output \
+    python /workspace/comfystream/comfycam_bridge.py
 ```
     
 11. Use ComfyCam with your application (OBS, Zoom, etc)
