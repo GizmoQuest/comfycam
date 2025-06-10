@@ -271,23 +271,29 @@ cd comfycam
 docker build -f docker/Dockerfile.base -t comfycam-base:latest . && docker build -f docker/Dockerfile -t comfystream:latest --build-arg BASE_IMAGE=comfycam-base:latest .
 ```
 
-7. Run the container with both server and bridge:
+7. Run the container:
 ```bash
 docker run -it --gpus all \
   -p 8188:8188 \
   -p 8889:8889 \
   -p 5678:5678 \
   --device=/dev/video2 \
+  --name comfycam \
   -v ~/models/ComfyUI--models:/workspace/ComfyUI/models \
   -v ~/models/ComfyUI--output:/workspace/ComfyUI/output \
   comfycam:latest \
-  bash -c "python server/app.py --download-models --build-engines --server & python comfycam_bridge.py"
+  --download-models --build-engines --server
 ```
 8. Start the Comfystream server and UI (Use Runpod settings)
 
 9. Launch your Comfy Workflow (JSON API file)
+
+10. Deploy ComfyCam in a new terminal
+```bash
+docker exec comfycam python comfycam_bridge.py
+```
     
-10. Use ComfyCam with your application (OBS, Zoom, etc)
+11. Use ComfyCam with your application (OBS, Zoom, etc)
 
 > [!IMPORTANT]
 > The virtual camera setup requires kernel module installation and loading. This is a system-level operation that should be done with caution. The configuration has been tested on Ubuntu 24.04 with Docker and may require adjustments for other distributions.
