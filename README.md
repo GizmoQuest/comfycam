@@ -271,7 +271,7 @@ cd comfycam
 docker build -f docker/Dockerfile.base -t comfycam-base:latest . && docker build -f docker/Dockerfile -t comfystream:latest --build-arg BASE_IMAGE=comfycam-base:latest .
 ```
 
-7. Start the Comfystream server and UI
+7. Start the Comfystream server and UI (Use Runpod settings)
 
 8. Launch your Comfy Workflow (JSON API file)
 
