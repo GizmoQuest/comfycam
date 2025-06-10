@@ -269,9 +269,9 @@ cd comfycam
 
 6. Build the Docker images. This will create two images:
    - `comfycam-base:latest`: The base image with all dependencies
-   - `comfystream:latest`: The final image with ComfyCam and ComfyStream
+   - `comfycam:latest`: The final image with ComfyCam and ComfyStream
 ```bash
-docker build -f docker/Dockerfile.base -t comfycam-base:latest . && docker build -f docker/Dockerfile -t comfystream:latest --build-arg BASE_IMAGE=comfycam-base:latest .
+docker build -f docker/Dockerfile.base -t comfycam-base:latest . && docker build -f docker/Dockerfile -t comfycam:latest --build-arg BASE_IMAGE=comfycam-base:latest .
 ```
 
 7. Run the container:
