@@ -286,6 +286,7 @@ docker run -it --gpus all \
 8. Start the Comfystream server and UI (Use Runpod settings)
 
 9. Launch your Comfy Workflow (JSON API file)
+    
 10. Use ComfyCam with your application (OBS, Zoom, etc)
 
 > [!IMPORTANT]
