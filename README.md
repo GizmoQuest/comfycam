@@ -224,3 +224,139 @@ This project has been tested locally successfully with the following setup:
 - Driver: 550.127.05
 - CUDA: 12.5
 - torch: 2.5.1+cu121
+
+# ComfyCam
+
+ComfyCam is a tool that captures AI-processed video frames from ComfyStream and outputs them to a virtual camera device, allowing you to use the processed video stream in any application that supports video input (like OBS, Zoom, etc.).
+
+## Prerequisites
+
+### System Requirements
+- Ubuntu 24.04 (tested and verified)
+- NVIDIA GPU with CUDA support
+- Docker
+
+### Virtual Camera Setup and Usage
+
+1. Install the required kernel modules:
+```bash
+sudo apt update
+sudo apt install dkms v4l2loopback-dkms
+```
+
+2. Reboot your system to ensure the kernel modules are properly loaded:
+```bash
+sudo reboot
+```
+
+3. After reboot, load the v4l2loopback module with the following parameters:
+```bash
+sudo modprobe v4l2loopback video_nr=2 card_label="ComfyCam" exclusive_caps=1 max_buffers=8
+```
+
+4. Clone the ComfyCam repository:
+```bash
+git clone https://github.com/GizmoQuest/comfycam.git
+```
+
+5. Navigate to the project directory:
+```bash
+cd comfycam
+```
+
+6. Build the Docker images. This will create two images:
+   - `comfycam-base:latest`: The base image with all dependencies
+   - `comfystream:latest`: The final image with ComfyCam and ComfyStream
+```bash
+docker build -f docker/Dockerfile.base -t comfycam-base:latest . && docker build -f docker/Dockerfile -t comfystream:latest --build-arg BASE_IMAGE=comfycam-base:latest .
+```
+
+7. Start the Comfystream server and UI
+
+8. Launch your Comfy Workflow (JSON API file)
+
+9. Run the container with both server and bridge:
+```bash
+docker run -it --gpus all \
+  -p 8188:8188 \
+  -p 8889:8889 \
+  -p 5678:5678 \
+  --device=/dev/video2 \
+  -v ~/models/ComfyUI--models:/workspace/ComfyUI/models \
+  -v ~/models/ComfyUI--output:/workspace/ComfyUI/output \
+  comfycam:latest \
+  bash -c "python server/app.py --download-models --build-engines --server & python comfycam_bridge.py"
+```
+10. Use ComfyCam with your application (OBS, Zoom, etc)
+
+> [!IMPORTANT]
+> The virtual camera setup requires kernel module installation and loading. This is a system-level operation that should be done with caution. The configuration has been tested on Ubuntu 24.04 with Docker and may require adjustments for other distributions.
+
+## Quick Start
+
+### Docker DevContainer
+
+The easiest way to get started is using the provided DevContainer configuration:
+
+1. Open the project in VS Code
+2. Install the "Remote - Containers" extension if you haven't already
+3. Click "Reopen in Container" when prompted
+
+This will set up a complete development environment with all dependencies.
+
+### Manual Setup
+
+If you prefer to run without Docker, you'll need to:
+
+1. Install Python 3.11 and create a conda environment:
+```bash
+conda create -n comfystream python=3.11
+conda activate comfystream
+```
+
+2. Install the package:
+```bash
+pip install git+https://github.com/livepeer/comfystream.git
+```
+
+## Usage
+
+1. Start the ComfyStream server:
+```bash
+python server/app.py --workspace <COMFY_WORKSPACE>
+```
+
+2. Open the ComfyStream UI in your browser (default: http://localhost:3000)
+
+3. Run the bridge script to capture the processed video stream:
+```bash
+python comfycam_bridge.py
+```
+
+The processed video stream will now be available as a virtual camera device at `/dev/video2` with the label "ComfyCam". You can use this virtual camera in any application that supports video input.
+
+## Troubleshooting
+
+### Common Issues
+
+1. **Virtual camera not showing up**
+   - Verify the v4l2loopback module is loaded: `lsmod | grep v4l2loopback`
+   - Check available video devices: `v4l2-ctl --list-devices`
+   - Ensure you have the correct permissions to access `/dev/video2`
+
+2. **Permission denied errors**
+   - Add your user to the video group: `sudo usermod -a -G video $USER`
+   - Log out and back in for the group changes to take effect
+
+### System Information
+
+This project has been tested with the following setup:
+- OS: Ubuntu 24.04
+- GPU: NVIDIA RTX 4060 Ti
+- Driver: 550.127.05
+- CUDA: 12.5
+- PyTorch: 2.5.1+cu121
+
+## Security Note
+
+The virtual camera setup requires system-level modifications. Always verify the source of any kernel modules or system modifications before applying them. The provided configuration has been tested on Ubuntu 24.04 and should be used with caution on other systems.
