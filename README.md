@@ -271,11 +271,7 @@ cd comfycam
 docker build -f docker/Dockerfile.base -t comfycam-base:latest . && docker build -f docker/Dockerfile -t comfystream:latest --build-arg BASE_IMAGE=comfycam-base:latest .
 ```
 
-7. Start the Comfystream server and UI (Use Runpod settings)
-
-8. Launch your Comfy Workflow (JSON API file)
-
-9. Run the container with both server and bridge:
+7. Run the container with both server and bridge:
 ```bash
 docker run -it --gpus all \
   -p 8188:8188 \
@@ -287,6 +283,9 @@ docker run -it --gpus all \
   comfycam:latest \
   bash -c "python server/app.py --download-models --build-engines --server & python comfycam_bridge.py"
 ```
+8. Start the Comfystream server and UI (Use Runpod settings)
+
+9. Launch your Comfy Workflow (JSON API file)
 10. Use ComfyCam with your application (OBS, Zoom, etc)
 
 > [!IMPORTANT]
