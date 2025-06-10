@@ -8,7 +8,7 @@ ENV	PATH="/workspace/miniconda3/bin:${PATH}" \
 
 RUN	echo "Using base image: ${BASE_IMAGE}" && \
 	apt update && \
-	apt install -yqq supervisor && \
+	apt install -yqq supervisor ffmpeg && \
 	wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
 
 WORKDIR	/
@@ -35,6 +35,9 @@ RUN	npm run build
 RUN touch /workspace/comfystream/nodes/web/static/.gitkeep
 
 WORKDIR	/workspace/comfystream
+
+# Copy comfycam bridge app
+COPY comfycam_bridge.py /workspace/comfystream/comfycam_bridge.py
 
 EXPOSE	8188	8889	3000
 EXPOSE	1024-65535/udp
