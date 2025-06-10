@@ -238,6 +238,9 @@ ComfyCam is a tool that captures AI-processed video frames from ComfyStream and 
 
 ### Virtual Camera Setup and Usage
 
+> [!IMPORTANT]
+> The virtual camera setup requires kernel module installation and loading. This is a system-level operation that should be done with caution. The configuration has been tested on Ubuntu 24.04 with Docker and may require adjustments for other distributions.
+
 1. Install the required kernel modules:
 ```bash
 sudo apt update
@@ -294,9 +297,6 @@ docker exec comfycam python comfycam_bridge.py
 ```
     
 11. Use ComfyCam with your application (OBS, Zoom, etc)
-
-> [!IMPORTANT]
-> The virtual camera setup requires kernel module installation and loading. This is a system-level operation that should be done with caution. The configuration has been tested on Ubuntu 24.04 with Docker and may require adjustments for other distributions.
 
 ## Quick Start
 
